@@ -1,0 +1,54 @@
+.LoginContainer{
+    background-color: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 1rem;
+    color: #111827 ;
+}
+.title{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.LoginContainer input{
+    width: 17rem;
+    height: 2.3rem;
+    border-radius: .3rem;
+    border: 1px solid #d1d5db ;
+    padding: 0 .5rem;
+
+}
+.submit{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.submit p{
+    text-align: center;    
+}
+.submit button{
+    width: 17rem;
+    height: 2.5rem;
+    border-radius: 1rem;
+    background-color: #22c55e ;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+button:hover{
+    background-color: rgb(70, 149, 70);
+    text-decoration: none;
+}
+.submit a:hover{
+    opacity: .7;
+}
+.register-link{
+    font-size: .8rem;
+    
+}
+link{
+    text-decoration: none;
+}
