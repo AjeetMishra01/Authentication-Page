@@ -15,6 +15,7 @@ function Login(){
         setPassword(e.target.value);
     }
 
+    //Handling Submit
     const handleSubmit= async (e)=>{
         e.preventDefault();
         
@@ -30,13 +31,13 @@ function Login(){
             const data=await response.json();
 
             if(response.ok){
-                navigate("/dashboard");
+                navigate("/dashboard",{state:{user: data.user}});
             }else{
                 alert(data.message);
             }
         }catch(error){
             console.error("Error from fetch:".error);
-            alert("SOmething went wrong. Try again later");
+            alert("Something went wrong. Try again later");
         }
 
         setEmail("");

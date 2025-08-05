@@ -2,8 +2,7 @@ import { useState } from "react";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./Register/Dashboard";
-
+import Dashboard from "./Dashboard/Dashboard"
 
 function App() {
 

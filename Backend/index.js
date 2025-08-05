@@ -1,51 +1,60 @@
 const express=require("express");
 const app=express();
 const cors=require("cors");
-const port=3000;
-const fs=require("fs");
+const mongoose=require("mongoose");
+const user=require("./models/user");
+
+//For Connecting Mogoose
+mongoose.connect("mongodb://127.0.0.1:27017/authentication")
+  .then(() => console.log("Connected to MongoDB"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
 //Middleware
 app.use(cors());
 app.use(express.json());
 
-const getUsers = () => {
-  const data = fs.readFileSync("./users.json", "utf8"); 
-  return JSON.parse(data);
-};
-const saveUsers = (users) => {
-    fs.writeFileSync("./users.json", JSON.stringify(users, null, 2), "utf8");
-};
-
-app.post("/login",(req,res)=>{
+//Login Route
+app.post("/login",async (req,res)=>{
     const {email,password} =req.body;
-    const users=getUsers();
-    const user=users.find(u=>u.email===email && u.password===password);
 
-    if(user){
-        res.json({succes:true, message:"Login Successfull", user:{name:user.name, email:user.email}});
-    }else{
-        res.status(401).json({success:false, message:"Invalid Credentials"});
+    try{
+        const existingUser =await user.findOne({email,password});
+
+        if(existingUser){
+            res.json({succes:true, message:"Login Successfull", user:{name:existingUser.name, email:existingUser.email}});
+        }else{
+            res.status(401).json({success:false, message:"Invalid Credentials"});
+        }
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({success:false, message:"Something went wrong"});
     }
 });
 
-app.post("/register",(req,res)=>{
+//Register Route
+app.post("/register",async (req,res)=>{
     const {name,email,password}=req.body;
-    const users=getUsers();
 
-    const userExists = users.some(u => u.email === email);
+    try{
+        const userExists = await user.findOne({email});
 
-    if(userExists){
-        return res.status(400).json({ success: false, message: "User Already Exists" });
-    }else{
-        users.push({name,email,password});
-        saveUsers(users);
-        res.json({success:true, message:"User Registered Successfully"});
-    }
+        if(userExists){
+            return res.status(400).json({ success: false, message: "User Already Exists" });
+        }
+        const newUser=new user({name,email,password});
+        await newUser.save();
+
+        res.json({success:true, message:"User registered succesfully"});
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({success:true, message:"Something went wrong"});
+    }    
 });
 
-
-
-
+//Listening
+const port=3000;
 app.listen(port,()=>{
     console.log("App listening at port "+port);
 })
